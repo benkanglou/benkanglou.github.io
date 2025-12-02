@@ -1,0 +1,5 @@
+{
+  "name": "ScholarTerm",
+  "description": "A personal scholar homepage designed as an interactive command-line terminal interface. Features portfolio navigation, publication listing, and an AI-powered research assistant.",
+  "requestFramePermissions": []
+}

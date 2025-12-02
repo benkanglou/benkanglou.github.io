@@ -1,0 +1,1 @@
+// This file is no longer used. The application has been converted to a static index.html.

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dr. Alex Mercer | Scholar Terminal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              mono: ['"Fira Code"', 'monospace'],
+            },
+            colors: {
+              terminal: {
+                bg: '#0c0c0c',
+                green: '#4af626',
+                dim: '#2d5e20',
+                yellow: '#f3e03b',
+                blue: '#5b9bd5',
+                cursor: '#4af626'
+              }
+            },
+            animation: {
+              'blink': 'blink 1s step-end infinite',
+            },
+            keyframes: {
+              blink: {
+                '0%, 100%': { opacity: '1' },
+                '50%': { opacity: '0' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #0c0c0c;
+        color: #4af626;
+        margin: 0;
+        height: 100vh;
+        overflow: hidden;
+      }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0c0c0c; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #2d5e20; 
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #4af626; 
+      }
+      /* CRT Effect */
+      .crt::before {
+        content: " ";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+        z-index: 2;
+        background-size: 100% 2px, 3px 100%;
+        pointer-events: none;
+      }
+      .text-glow {
+        text-shadow: 0 0 4px rgba(74, 246, 38, 0.5);
+      }
+      /* Input styling to look like terminal */
+      #command-input {
+        caret-color: #4af626;
+        outline: none;
+        background: transparent;
+        border: none;
+        width: 100%;
+        font-family: 'Fira Code', monospace;
+        color: #4af626;
+      }
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
+      }
+    }
+    </script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="font-mono crt bg-terminal-bg text-terminal-green">
+    
+    <div id="app-container" class="max-w-4xl mx-auto h-full flex flex-col relative z-10 p-4 md:p-8 text-glow overflow-y-auto">
+        <!-- Header -->
+        <div class="border-b border-terminal-dim pb-2 mb-4 flex justify-between items-center select-none text-xs md:text-sm opacity-50 sticky top-0 bg-terminal-bg z-20">
+           <span>ScholarTerm [v1.0.0]</span>
+           <span>Dr. Alex Mercer | Institute of AI</span>
+           <span id="date-display" class="hidden md:inline"></span>
+        </div>
+
+        <!-- Output Area -->
+        <div id="terminal-output" class="flex flex-col space-y-1 w-full pb-2"></div>
+
+        <!-- Input Area -->
+        <div class="flex flex-row items-center mt-2 w-full pb-8">
+            <span class="mr-2 text-terminal-blue font-bold whitespace-nowrap">visitor@scholar:~$</span>
+            <input type="text" id="command-input" autocomplete="off" autofocus spellcheck="false" />
+        </div>
+    </div>
+
+    <!-- Main Logic -->
+    <script type="module">
+        import { GoogleGenAI } from "@google/genai";
+
+        // --- Constants & Data ---
+        const SCHOLAR_DATA = {
+          name: "Dr. Alex Mercer",
+          role: "Senior Research Scientist",
+          university: "Institute of Artificial Intelligence",
+          bio: `Dr. Alex Mercer is a researcher at the intersection of Computer Vision and Generative AI. 
+          
+          His work focuses on multimodal representation learning and efficient transformer architectures. 
+          He completed his PhD at MIT CSAIL and has published in top-tier conferences including NeurIPS, CVPR, and ICML.
+          
+          Currently exploring the reasoning capabilities of large language models in scientific discovery.`,
+          researchInterests: [
+            "Multimodal Learning",
+            "Generative Models",
+            "Computer Vision",
+            "Efficient Transformers"
+          ],
+          email: "alex.mercer@example.edu",
+          github: "github.com/alexmercer-ai",
+          twitter: "@mercer_ai",
+          publications: [
+            {
+              id: "p1",
+              title: "Efficient Multimodal Transformers for Video Understanding",
+              year: 2024,
+              venue: "CVPR",
+              authors: ["A. Mercer", "J. Doe", "S. Smith"],
+              abstract: "We propose a novel attention mechanism that reduces the quadratic complexity of vision transformers in video processing tasks...",
+              link: "https://arxiv.org/abs/2024.12345"
+            },
+            {
+              id: "p2",
+              title: "Generative Agents in Scientific Discovery",
+              year: 2023,
+              venue: "NeurIPS",
+              authors: ["A. Mercer", "K. Lee"],
+              abstract: "This paper explores how autonomous agents powered by LLMs can formulate hypotheses and design experiments...",
+              link: "https://arxiv.org/abs/2023.67890"
+            },
+            {
+              id: "p3",
+              title: "Self-Supervised Learning for Low-Resource Languages",
+              year: 2022,
+              venue: "ICLR",
+              authors: ["B. Chen", "A. Mercer"],
+              abstract: "A framework for leveraging unlabeled data to improve translation quality in low-resource settings.",
+              link: "https://arxiv.org/abs/2022.11223"
+            }
+          ]
+        };
+
+        const ASCII_HEADER = `
+   _____      _           _               _______                  
+  / ____|    | |         | |             |__   __|                 
+ | (___   ___| |__   ___ | | __ _ _ __      | | ___ _ __ _ __ ___  
+  \\___ \\ / __| '_ \\ / _ \\| |/ _\` | '__|     | |/ _ \\ '__| '_ \` _ \\ 
+  ____) | (__| | | | (_) | | (_| | |        | |  __/ |  | | | | | |
+ |_____/ \\___|_| |_|\\___/|_|\\__,_|_|        |_|\\___|_|  |_| |_| |_|
+                                                                   
+ Welcome to the interactive portfolio of ${SCHOLAR_DATA.name}.
+ Type 'help' to see available commands.
+`;
+
+        const HELP_HTML = `
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+    <div><span class="text-terminal-yellow font-bold">ls / dir</span><p class="ml-4 text-gray-400">List directory contents.</p></div>
+    <div><span class="text-terminal-yellow font-bold">cat [file]</span><p class="ml-4 text-gray-400">Display content of a file.</p></div>
+    <div><span class="text-terminal-yellow font-bold">open [link]</span><p class="ml-4 text-gray-400">Open an external link.</p></div>
+    <div><span class="text-terminal-yellow font-bold">whoami</span><p class="ml-4 text-gray-400">Display current user info.</p></div>
+    <div><span class="text-terminal-yellow font-bold">ask "[query]"</span><p class="ml-4 text-gray-400">Ask the AI Assistant about my research.</p></div>
+    <div><span class="text-terminal-yellow font-bold">clear</span><p class="ml-4 text-gray-400">Clear the terminal screen.</p></div>
+    <div><span class="text-terminal-yellow font-bold">contact</span><p class="ml-4 text-gray-400">Display contact information.</p></div>
+</div>`;
+
+        // --- State & History ---
+        let commandHistory = [];
+        let historyIndex = -1;
+        
+        // --- DOM Elements ---
+        const outputDiv = document.getElementById('terminal-output');
+        const inputEl = document.getElementById('command-input');
+        const containerEl = document.getElementById('app-container');
+        const dateEl = document.getElementById('date-display');
+
+        // --- Initialization ---
+        dateEl.textContent = new Date().toLocaleDateString();
+
+        // Focus logic
+        document.body.addEventListener('click', () => {
+             if (window.getSelection().toString() === '') {
+                inputEl.focus();
+            }
+        });
+
+        // --- Helper Functions ---
+
+        function scrollToBottom() {
+            containerEl.scrollTop = containerEl.scrollHeight;
+        }
+
+        function createLineElement(type, content) {
+            const div = document.createElement('div');
+            div.className = "w-full break-words mb-1";
+
+            if (type === 'COMMAND') {
+                div.innerHTML = `<div class="flex flex-row items-center text-terminal-blue font-bold mt-2">
+                    <span class="mr-2">visitor@scholar:~$</span>
+                    <span class="text-white">${escapeHtml(content)}</span>
+                </div>`;
+            } else if (type === 'OUTPUT') {
+                // If content is HTML string (from internal logic), set innerHTML. 
+                // Careful with XSS in real apps, but this is static internal data.
+                div.className += " text-terminal-green pl-2 whitespace-pre-wrap leading-relaxed";
+                div.innerHTML = content; 
+            } else if (type === 'ERROR') {
+                div.className += " text-red-500 pl-2";
+                div.textContent = content;
+            } else if (type === 'ASCII') {
+                div.className += " text-terminal-green whitespace-pre text-[8px] md:text-xs font-bold leading-none my-4 select-none";
+                div.textContent = content;
+            } else if (type === 'SYSTEM') {
+                div.className += " text-gray-500 italic pl-2 text-sm";
+                div.textContent = content;
+            }
+            return div;
+        }
+
+        function addLine(type, content) {
+            const el = createLineElement(type, content);
+            outputDiv.appendChild(el);
+            scrollToBottom();
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        // --- AI Logic ---
+        async function queryAI(query) {
+            try {
+                // In the editor environment, process.env.API_KEY is available.
+                // In a purely static local download, this line will throw or be undefined.
+                const apiKey = process.env.API_KEY; 
+                
+                if (!apiKey) throw new Error("API Key missing");
+                
+                const ai = new GoogleGenAI({ apiKey });
+                const systemInstruction = `
+                    You are an AI assistant for the scholar portfolio of ${SCHOLAR_DATA.name}.
+                    Data: ${JSON.stringify(SCHOLAR_DATA)}
+                    Answer visitor questions based STRICTLY on this data. Be concise, professional, CLI-style.
+                `;
+
+                const response = await ai.models.generateContent({
+                    model: 'gemini-2.5-flash',
+                    contents: query,
+                    config: { systemInstruction, maxOutputTokens: 300 }
+                });
+                
+                return response.text || "No response.";
+            } catch (e) {
+                console.error(e);
+                return "Error: Unable to connect to research assistant (API Key missing or invalid).";
+            }
+        }
+
+        // --- Command Handling ---
+
+        async function handleCommand(rawCmd) {
+            const cmd = rawCmd.trim();
+            if (!cmd) return;
+
+            addLine('COMMAND', cmd);
+            commandHistory.push(cmd);
+            historyIndex = -1;
+            inputEl.value = '';
+
+            const parts = cmd.split(' ');
+            const main = parts[0].toLowerCase();
+            const args = parts.slice(1).join(' ');
+
+            switch (main) {
+                case 'help':
+                    addLine('OUTPUT', HELP_HTML);
+                    break;
+                case 'clear':
+                case 'cls':
+                    outputDiv.innerHTML = '';
+                    break;
+                case 'whoami':
+                    addLine('OUTPUT', 'visitor@internet');
+                    break;
+                case 'ls':
+                case 'dir':
+                case 'll':
+                    addLine('OUTPUT', `
+<div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+    <span class="text-gray-300">bio.txt</span>
+    <span class="text-terminal-yellow">publications.json</span>
+    <span class="text-gray-300">interests.list</span>
+    <span class="text-gray-300">contact.card</span>
+    <span class="text-terminal-blue">cv.pdf (link)</span>
+</div>`);
+                    break;
+                case 'cat':
+                case 'view':
+                    handleCat(args);
+                    break;
+                case 'contact':
+                    addLine('OUTPUT', `Email: ${SCHOLAR_DATA.email}<br>GitHub: <a href="https://${SCHOLAR_DATA.github}" target="_blank" class="underline hover:text-white">${SCHOLAR_DATA.github}</a><br>Twitter: ${SCHOLAR_DATA.twitter}`);
+                    break;
+                case 'open':
+                    if (args === 'cv') {
+                        addLine('OUTPUT', 'Opening CV (Mock)...');
+                    } else if (args.startsWith('http')) {
+                        window.open(args, '_blank');
+                        addLine('OUTPUT', `Opening ${escapeHtml(args)}...`);
+                    } else {
+                        addLine('ERROR', 'Usage: open [url] or open cv');
+                    }
+                    break;
+                case 'ask':
+                    if (!args) {
+                        addLine('ERROR', 'Usage: ask "[your question]"');
+                    } else {
+                        addLine('SYSTEM', 'Connecting to Gemini Neural Network...');
+                        inputEl.disabled = true;
+                        const answer = await queryAI(args);
+                        addLine('OUTPUT', escapeHtml(answer));
+                        inputEl.disabled = false;
+                        inputEl.focus();
+                    }
+                    break;
+                default:
+                    addLine('ERROR', `Command not found: ${escapeHtml(main)}. Type 'help'.`);
+            }
+        }
+
+        function handleCat(filename) {
+            const clean = filename.toLowerCase().replace('./', '');
+            if (clean.includes('bio')) {
+                addLine('OUTPUT', SCHOLAR_DATA.bio);
+            } else if (clean.includes('pub')) {
+                const pubs = SCHOLAR_DATA.publications.map((p, i) => 
+                    `[${i+1}] ${p.title} (${p.year})\n    Venue: ${p.venue}\n    Link: <a href="${p.link}" target="_blank" class="underline">${p.link}</a>`
+                ).join('\n\n');
+                addLine('OUTPUT', pubs);
+            } else if (clean.includes('interest')) {
+                addLine('OUTPUT', SCHOLAR_DATA.researchInterests.map(i => `- ${i}`).join('\n'));
+            } else if (clean.includes('contact')) {
+                 addLine('OUTPUT', `Email: ${SCHOLAR_DATA.email}\nGitHub: ${SCHOLAR_DATA.github}`);
+            } else {
+                addLine('ERROR', `File not found: ${escapeHtml(filename)}`);
+            }
+        }
+
+        // --- Event Listeners ---
+
+        inputEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                handleCommand(inputEl.value);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (commandHistory.length > 0) {
+                    historyIndex = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1);
+                    inputEl.value = commandHistory[historyIndex];
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (commandHistory.length > 0 && historyIndex !== -1) {
+                    historyIndex = Math.min(commandHistory.length - 1, historyIndex + 1);
+                    inputEl.value = commandHistory[historyIndex];
+                    if (historyIndex === commandHistory.length - 1) {
+                        // Optional: Clear if going past end
+                        // historyIndex = -1; 
+                        // inputEl.value = '';
+                    }
+                }
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                const opts = ['help', 'ls', 'cat', 'clear', 'ask', 'contact', 'bio.txt', 'publications.json'];
+                const val = inputEl.value;
+                const match = opts.find(o => o.startsWith(val));
+                if (match) inputEl.value = match;
+            }
+        });
+
+        // --- Boot Sequence ---
+        (async () => {
+            addLine('SYSTEM', 'Initializing ScholarTerm v1.0.0...');
+            await new Promise(r => setTimeout(r, 500));
+            addLine('SYSTEM', 'Loading profile data...');
+            await new Promise(r => setTimeout(r, 500));
+            addLine('ASCII', ASCII_HEADER);
+            addLine('OUTPUT', "Type 'help' to start exploring.");
+        })();
+
+    </script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
