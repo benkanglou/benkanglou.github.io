@@ -145,6 +145,37 @@ main {
     font-style: italic;
 }
 
+.news-item {
+    border-left: 4px solid var(--secondary-color);
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    background-color: #ebebeb;
+    font-size: 18px;
+    line-height: 1.7;
+    transition: all 0.2s;
+    display: flex;
+    gap: 15px;
+    align-items: baseline;
+}
+
+.news-item:hover {
+    background-color: #dcdcdc;
+    transform: translateX(5px);
+    box-shadow: -4px 0px 0px var(--secondary-color);
+}
+
+.news-date {
+    color: #8B0000;
+    font-weight: bold;
+    white-space: nowrap;
+    min-width: 75px;
+}
+
+.news-item em {
+    color: var(--accent-color);
+    font-style: italic;
+}
+
 .pixel-footer {
     margin-top: 40px;
     padding: 20px;
@@ -188,6 +219,12 @@ main {
 
     .publication {
         font-size: 10px;
+    }
+
+    .news-item {
+        font-size: 10px;
+        flex-direction: column;
+        gap: 4px;
     }
 
     body {
