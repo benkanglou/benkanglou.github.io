@@ -1,0 +1,213 @@
+/* ========== Pixel Art Academic Homepage ========== */
+:root {
+    --primary-color: #333333;
+    --secondary-color: #606060;
+    --accent-color: #1a1a1a;
+    --text-color: #606060;
+    --bg-color: #ffffff;
+    --box-bg: #f5f5f5;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Georgia', 'Garamond', serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.8;
+    font-size: 14px;
+    overflow-x: hidden;
+}
+
+.pixel-container {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ========== 导航栏 ========== */
+.pixel-nav {
+    margin-bottom: 40px;
+    border: none;
+    background: linear-gradient(135deg, #fafafa 0%, var(--box-bg) 100%);
+    padding: 20px;
+}
+
+.nav-title {
+    font-size: 25px;
+    font-weight: bold;
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    cursor: pointer;
+    text-shadow: 2px 2px 0px #e0e0e0;
+    transition: all 0.2s;
+    letter-spacing: 2px;
+}
+
+.nav-title:hover {
+    color: var(--secondary-color);
+    text-shadow: 3px 3px 0px #d0d0d0;
+    transform: scale(1.05);
+}
+
+.nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.pixel-btn {
+    font-family: 'Georgia', serif;
+    font-size: 20px;
+    padding: 10px 15px;
+    border: 2px solid var(--secondary-color);
+    background-color: #ffffff;
+    color: var(--secondary-color);
+    cursor: pointer;
+    transition: all 0.1s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.pixel-btn:hover {
+    background-color: var(--secondary-color);
+    color: #ffffff;
+    box-shadow: 4px 4px 0px rgba(100, 100, 100, 0.3);
+    transform: translate(-2px, -2px);
+}
+
+.pixel-btn:active {
+    transform: translate(2px, 2px);
+}
+
+main {
+    margin-top: 30px;
+}
+
+.page {
+    display: block;
+}
+
+.pixel-section {
+    margin-bottom: 30px;
+}
+
+.welcome-box {
+    border: none;
+    background: #fafafa;
+    padding: 40px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.intro-box {
+    border: 2px dashed var(--secondary-color);
+    padding: 15px;
+    background-color: #ebebeb;
+    margin-top: 20px;
+}
+
+.intro-box p {
+    font-size: 20px;
+    margin: 8px 0;
+    color: var(--text-color);
+}
+
+.publication {
+    border-left: 4px solid var(--secondary-color);
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #ebebeb;
+    font-size: 18px;
+    line-height: 1.7;
+    transition: all 0.2s;
+}
+
+.publication:hover {
+    background-color: #dcdcdc;
+    transform: translateX(5px);
+    box-shadow: -4px 0px 0px var(--secondary-color);
+}
+
+.publication strong {
+    color: var(--secondary-color);
+}
+
+.publication em {
+    color: var(--accent-color);
+    font-style: italic;
+}
+
+.pixel-footer {
+    margin-top: 40px;
+    padding: 20px;
+    text-align: center;
+    font-size: 18px;
+    color: var(--accent-color);
+}
+
+.pixel-footer p {
+    margin: 8px 0;
+}
+
+@media (max-width: 768px) {
+    .pixel-container {
+        padding: 10px;
+    }
+
+    .nav-links {
+        flex-direction: column;
+    }
+
+    .pixel-btn {
+        width: 100%;
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+
+    body {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pixel-container {
+        padding: 8px;
+    }
+
+    .nav-title {
+        font-size: 14px;
+    }
+
+    .publication {
+        font-size: 10px;
+    }
+
+    body {
+        font-size: 11px;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--primary-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border: 2px solid var(--primary-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+}
