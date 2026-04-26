@@ -33,7 +33,7 @@ body {
 
 /* ========== 导航栏 ========== */
 .pixel-nav {
-    margin-bottom: 40px;
+    margin-bottom:5px;
     border: none;
     background: linear-gradient(135deg, #fafafa 0%, var(--box-bg) 100%);
     padding: 20px;
@@ -96,7 +96,7 @@ main {
 }
 
 .pixel-section {
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
 
 .welcome-box {
@@ -104,8 +104,8 @@ main {
     gap: 40px;
     align-items: flex-start;
     background: #fafafa;
-    padding: 40px;
-    margin-bottom: 30px;
+    padding: 10px;
+    margin-bottom: 10px;
 }
 
 .welcome-photo {
@@ -117,7 +117,7 @@ main {
 
 .welcome-text {
     flex: 1;
-    font-size: 18px;
+    font-size: 15px;
     line-height: 1.8;
 }
 
