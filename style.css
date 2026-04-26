@@ -115,6 +115,30 @@ main {
     background-color: #e0e0e0;
 }
 
+.welcome-photo-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.social-links {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+}
+
+.social-links a {
+    color: var(--secondary-color);
+    font-size: 20px;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.social-links a:hover {
+    color: var(--accent-color);
+}
+
 .welcome-text {
     flex: 1;
     font-size: 15px;
@@ -130,7 +154,16 @@ main {
     text-decoration: underline;
 }
 
+.email-badge {
+    display: inline-block;
+    background-color: #e8e8e8;
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 0.9em;
+}
+
 .publication {
+    position: relative;
     border-left: 4px solid var(--secondary-color);
     padding: 17px;
     margin-bottom: 10px;
@@ -138,6 +171,19 @@ main {
     font-size: 15px;
     line-height: 1.7;
     transition: all 0.2s;
+}
+
+.first-author-tag {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 11px;
+    background-color: #8B0000;
+    color: #ffffff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
 }
 
 .publication:hover {
@@ -190,7 +236,7 @@ main {
     margin-top: 40px;
     padding: 20px;
     text-align: center;
-    font-size: 18px;
+    font-size: 15px;
     color: var(--accent-color);
 }
 
