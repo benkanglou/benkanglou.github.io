@@ -40,7 +40,7 @@ body {
 }
 
 .nav-title {
-    font-size: 25px;
+    font-size: 20px;
     font-weight: bold;
     color: var(--accent-color);
     margin-bottom: 20px;
@@ -65,7 +65,7 @@ body {
 
 .pixel-btn {
     font-family: 'Georgia', serif;
-    font-size: 20px;
+    font-size: 15px;
     padding: 10px 15px;
     border: 2px solid var(--secondary-color);
     background-color: #ffffff;
@@ -100,32 +100,42 @@ main {
 }
 
 .welcome-box {
-    border: none;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
     background: #fafafa;
     padding: 40px;
-    text-align: center;
     margin-bottom: 30px;
 }
 
-.intro-box {
-    border: 2px dashed var(--secondary-color);
-    padding: 15px;
-    background-color: #ebebeb;
-    margin-top: 20px;
+.welcome-photo {
+    width: 180px;
+    min-width: 180px;
+    height: 220px;
+    background-color: #e0e0e0;
 }
 
-.intro-box p {
-    font-size: 20px;
-    margin: 8px 0;
-    color: var(--text-color);
+.welcome-text {
+    flex: 1;
+    font-size: 18px;
+    line-height: 1.8;
+}
+
+.welcome-text a {
+    color: #8B0000;
+    text-decoration: none;
+}
+
+.welcome-text a:hover {
+    text-decoration: underline;
 }
 
 .publication {
     border-left: 4px solid var(--secondary-color);
-    padding: 15px;
-    margin-bottom: 15px;
+    padding: 17px;
+    margin-bottom: 10px;
     background-color: #ebebeb;
-    font-size: 18px;
+    font-size: 15px;
     line-height: 1.7;
     transition: all 0.2s;
 }
@@ -150,7 +160,7 @@ main {
     padding: 12px 15px;
     margin-bottom: 12px;
     background-color: #ebebeb;
-    font-size: 18px;
+    font-size: 15px;
     line-height: 1.7;
     transition: all 0.2s;
     display: flex;
@@ -201,6 +211,19 @@ main {
         width: 100%;
         font-size: 14px;
         padding: 8px 12px;
+    }
+
+    .welcome-box {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .welcome-photo {
+        width: 140px;
+        min-width: 140px;
+        height: 170px;
     }
 
     body {
