@@ -171,7 +171,6 @@ h2 {
     color: var(--primary-color);
     margin-bottom: 20px;
     padding-bottom: 8px;
-    border-bottom: 1px solid var(--light-gray);
 }
 
 h2#publications {
@@ -186,12 +185,8 @@ h2#publications {
     display: flex;
     gap: 20px;
     align-items: baseline;
-    border-bottom: 1px solid var(--light-gray);
 }
 
-.news-item:last-child {
-    border-bottom: none;
-}
 
 .news-date {
     color: var(--accent-color);
@@ -210,13 +205,8 @@ h2#publications {
 .publication {
     position: relative;
     padding: 18px 0;
-    border-bottom: 1px solid var(--light-gray);
     font-size: 15px;
     line-height: 1.75;
-}
-
-.publication:last-child {
-    border-bottom: none;
 }
 
 .pub-inner {
